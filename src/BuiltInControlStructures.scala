@@ -6,6 +6,7 @@ object BuiltInControlStructures extends App {
     else "default.txt"
   if (!args(0).isEmpty)
     filename = args(0)
+
   // imperative style
   var filename = "default.txt"
 
