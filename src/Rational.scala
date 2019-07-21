@@ -1,9 +1,9 @@
 class Rational(n: Int, d: Int) {
   require(d != 0)
 
+  private val g = gcd(n, d)
   val numer: Int = n / g
   val denom: Int = d / g
-  private val g = gcd(n, d)
 
   def this(n: Int) = this(n, 1)
 
@@ -13,8 +13,32 @@ class Rational(n: Int, d: Int) {
     new Rational(numer * that.denom + that.numer * denom, denom * that.denom)
   }
 
+  def +(i: Int): Rational = {
+    new Rational(numer * i * denom, denom)
+  }
+
+  def -(that: Rational): Rational = {
+    new Rational(numer * that.denom - that.numer * denom, denom * that.denom)
+  }
+
+  def -(i: Int): Rational = {
+    new Rational(numer - i * denom, denom)
+  }
+
   def *(that: Rational): Rational = {
     new Rational(numer * that.numer, denom * that.denom)
+  }
+
+  def *(i: Int): Rational = {
+    new Rational(numer * i, denom)
+  }
+
+  def /(that: Rational): Rational = {
+    new Rational(numer * that.denom, denom * that.numer)
+  }
+
+  def /(i: Int): Rational = {
+    new Rational(numer, denom * i)
   }
 
   private def gcd(a: Int, b: Int): Int = {
@@ -31,5 +55,7 @@ object Application extends App {
 
   println(sum)
   println(multiple)
+
+
 }
 
