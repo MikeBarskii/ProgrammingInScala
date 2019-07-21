@@ -56,6 +56,8 @@ object Application extends App {
   println(sum)
   println(multiple)
 
+  implicit def intToRational(x: Int): Rational = new Rational(x)
 
+  println(2 * x)
 }
 
