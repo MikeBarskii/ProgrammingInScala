@@ -32,12 +32,17 @@ def error(message: String): Nothing =
   As nothing is subclass of all classes, even values,
   this type of implementation is possible
  */
-
 def divide(x: Int, y: Int): Int =
   if (y != 0) x / y
   else error("can't divide by zero")
 
 // not compatible
-val i: Int = null
+//val i: Int = null
 
+class Dollars(val amount: Int) extends AnyVal {
+  override def toString: String = "$" + amount
+}
+
+val money = new Dollars(10000)
+money.amount
 
