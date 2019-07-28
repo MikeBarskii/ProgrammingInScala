@@ -1,4 +1,4 @@
-import chapter10.{ArrayElement, Element, LineElement, UniformElement}
+import chapter10.{Element, LineElement}
 
 val e1: Element = new ArrayElement(Array("hello", "world"))
 val ae: ArrayElement = new LineElement("hello")

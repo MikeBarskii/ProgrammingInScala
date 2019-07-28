@@ -1,31 +1,81 @@
 package chapter10
 
-abstract class Element {
-  def contents: Array[String]
+import chapter10.Element.elem
 
-  def height: Int = contents.length
+abstract class Element {
+
+  def contents: Array[String]
 
   def width: Int = if (height == 0) 0 else contents(0).length
 
+  def height: Int = contents.length
+
   def above(that: Element): Element = {
-    new ArrayElement(this.contents ++ that.contents)
+    val this1 = this widen that.width
+    val that1 = that widen this.width
+    elem(this1.contents ++ that1.contents)
   }
 
-  // imperative style
-  def besideI(that: Element): Element = {
-    val contents = new Array[String](this.contents.length)
-    for (i <- 0 until this.contents.length)
-      contents(i) = this.contents(i) + that.contents(i)
+  def beside(that: Element): Element = {
+    val this1 = this heighten that.height
+    val that1 = that heighten this.height
+    elem(
+      for ((line1, line2) <- this1.contents zip that1.contents)
+        yield line1 + line2)
+  }
+
+  def widen(w: Int): Element =
+    if (w <= width) this
+    else {
+      val left = elem(' ', (w - width) / 2, height)
+      val right = elem(' ', w - width - left.width, height)
+      left beside this beside right
+    }
+
+  def heighten(h: Int): Element =
+    if (h <= height) this
+    else {
+      val top = elem(' ', width, (h - height) / 2)
+      val bot = elem(' ', width, h - height - top.height)
+      top above this above bot
+    }
+
+  override def toString: String = contents mkString "\n"
+}
+
+object Element {
+
+  private class ArrayElement(
+                              val contents: Array[String]
+                            ) extends Element
+
+  private class LineElement(s: String) extends Element {
+    val contents: Array[String] = Array(s)
+
+    override def height: Int = 1
+
+    override def width: Int = s.length
+  }
+
+  private class UniformElement(
+                                ch: Char,
+                                override val width: Int,
+                                override val height: Int
+                              ) extends Element {
+    private val line = ch.toString * width
+
+    def contents: Array[String] = Array.fill(height)(line)
+  }
+
+  def elem(contents: Array[String]): Element = {
     new ArrayElement(contents)
   }
 
-  //functional style
-  def beside(that: Element): Element = {
-    new ArrayElement(
-      for (
-        (line1, line2) <- this.contents zip that.contents
-      ) yield line1 + line2)
+  def elem(chr: Char, width: Int, height: Int): Element = {
+    new UniformElement(chr, width, height)
   }
 
-  override def toString: String = contents mkString "\n"
+  def elem(line: String): Element = {
+    new LineElement(line)
+  }
 }
